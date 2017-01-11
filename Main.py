@@ -1,3 +1,5 @@
+import sys
+
 class T:
 
     f = ''
@@ -24,6 +26,10 @@ class T:
         return T('(' + self.f + ' / ' + p.f + ')', '((' + self.df + ' * ' + p.f + ' - ' + p.df + ' * ' + self.f + ') / ' + p.f + ' ** 2)')
 
     def __pow__(self, p):
+        if isNum(p):
+            p = toT(p)
+            return T('(' + self.f + ' ** ' + p.f + ')',
+                     '(' + self.f + ' ** ' + p.f + ' * (' + p.f + ' * ' + self.df + ' / ' + self.f + '))')
         p = toT(p)
         return T('(' + self.f + ' ** ' + p.f + ')', '(' + self.f + ' ** ' + p.f + ' * (' + p.df + ' * ln(' + self.f + ') + ' + p.f + ' * ' + self.df + ' / ' + self.f + '))')
 
@@ -54,8 +60,11 @@ class T:
         return T('(-' + self.f + ')', '(-' + self.df + ')')
 
 
+def isNum(p):
+    return (type(p) is int) or (type(p) is float)
+
 def toT(p):
-    if (type(p) is int) or (type(p) is float):
+    if isNum(p):
         return T('(' + str(p) + ')', '0')
     return p
 
